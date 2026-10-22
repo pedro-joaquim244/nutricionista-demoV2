@@ -1,0 +1,7 @@
+import { ArrowUpRight, Plus } from 'lucide-react';
+import styles from './style.module.css';
+
+export default function Faq({ contact }) {
+ 
+ return (<section className={[styles['faq'], 'wrap', 'section', 'reveal'].join(' ')} id="duvidas"><div><p className="eyebrow">PODEMOS CONVERSAR SOBRE ISSO</p><h2>Para começar<br/><em>com tranquilidade.</em></h2><p>Ficou com alguma outra dúvida?</p><button className="text-link" onClick={contact}>Me chame no WhatsApp <ArrowUpRight size={18}/></button></div><div className={[styles['questions']].join(' ')}>{[['Como funciona a primeira consulta?','É um momento de escuta para conhecer sua rotina, seus gostos, seu histórico e seus objetivos. A partir dessa conversa, definimos os próximos passos do acompanhamento.'],['O atendimento pode ser online?','Sim. A proposta inclui consultas por videochamada. Os detalhes de agendamento e a plataforma utilizada são combinados no contato inicial.'],['Vou precisar deixar de comer o que gosto?','A proposta é considerar suas preferências e necessidades individuais. As orientações são construídas em consulta, com espaço para conversar sobre os alimentos que fazem parte da sua vida.'],['Como faço para agendar?','Use um dos botões de contato para conversar pelo WhatsApp e consultar horários, formatos e valores. Nesta versão demonstrativa, o número ainda precisa ser configurado.']].map(([q,a]) => <details key={q}><summary>{q}<Plus size={18}/></summary><p>{a}</p></details>)}</div></section>);
+}

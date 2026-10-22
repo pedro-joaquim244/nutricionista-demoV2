@@ -1,0 +1,10 @@
+﻿node_modules/
+dist/
+*.tar.gz
+*.log
+.env
+.env.*
+!.env.example
+nutricionista/.git-preserved/
+nutri-desktop.png
+nutri-mobile.png

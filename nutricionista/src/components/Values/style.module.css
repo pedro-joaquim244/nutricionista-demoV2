@@ -1,0 +1,2 @@
+.values{background:var(--cream);border-block:1px solid #254b610d;padding:24px 0}.values :global(.wrap){display:flex;justify-content:space-between;align-items:center;gap:20px;font-size:12px}.values svg{width:17px;stroke-width:1;color:#829b9e}
+@media(max-width:760px){.values{padding:23px 0}.values :global(.wrap){display:grid;grid-template-columns:1fr 1fr;font-size:10px;gap:18px 12px;text-align:center}.values svg{display:none}}

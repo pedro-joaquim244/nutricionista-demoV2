@@ -1,0 +1,10 @@
+{
+  "name": "nutricionista-demo-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix nutricionista run dev",
+    "build": "npm --prefix nutricionista run build",
+    "preview": "npm --prefix nutricionista run preview",
+    "postinstall": "npm --prefix nutricionista install"
+  }
+}

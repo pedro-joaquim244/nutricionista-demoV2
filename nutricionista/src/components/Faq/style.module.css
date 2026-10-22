@@ -1,0 +1,3 @@
+.faq{display:grid;grid-template-columns:1fr 1fr;gap:75px}.faq h2{font-size:42px}.faq>div>p:not(:global(.eyebrow)){font-size:13px;margin:25px 0 0}.questions{padding-top:12px}
+@media(max-width:1000px){.faq{gap:35px}}
+@media(max-width:760px){.faq{grid-template-columns:1fr;gap:20px}.faq h2{font-size:38px}}
