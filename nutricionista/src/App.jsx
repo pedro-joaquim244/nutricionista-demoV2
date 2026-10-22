@@ -1,35 +1,321 @@
 import { useEffect, useRef, useState } from 'react';
+import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-import { ArrowDown, ArrowRight, ArrowUpRight, Check, ChevronDown, Heart, Leaf, Menu, MessageCircle, MoveUpRight, Sprout, Utensils, X } from 'lucide-react';
+import {
+  ArrowDown, ArrowRight, ArrowUpRight, CalendarDays, Check, ChevronDown,
+  ClipboardCheck, Clock3, HeartHandshake, Leaf, MapPin, Menu, MessageCircle,
+  Monitor, Sparkles, Sprout, Target, X,
+} from 'lucide-react';
 import { siteConfig } from './config';
 import { photos } from './data/photos';
 import './redesign.css';
+
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
-const journey = [['01', 'Primeiro contato', 'Uma conversa inicial para entender sua rotina e ouvir o que você busca.'], ['02', 'Olhar individual', 'Conhecemos seus hábitos, preferências e necessidades com cuidado.'], ['03', 'Plano possível', 'Definimos juntos escolhas que façam sentido para a sua vida real.'], ['04', 'Seguimos juntos', 'Acompanhamos o processo e ajustamos a rota sempre que necessário.']];
-const topics = [['Relação com a comida', 'Como reconhecer padrões e criar mais tranquilidade à mesa.', photos.bowl], ['Organização sem rigidez', 'Ideias práticas para cuidar da alimentação na rotina que você tem.', photos.food], ['Hábitos que permanecem', 'Pequenos passos que respeitam seu tempo e suas preferências.', photos.fruit]];
-export default function App() {
- const root=useRef(null), modal=useRef(null), lastContact=useRef(null), [menu,setMenu]=useState(false), [progress,setProgress]=useState(0);
- const contact=(event)=>{if(siteConfig.whatsappNumber){window.open(`https://wa.me/${siteConfig.whatsappNumber.replace(/\D/g,'')}?text=${encodeURIComponent(siteConfig.whatsappMessage)}`,'_blank','noopener,noreferrer')}else{lastContact.current=event.currentTarget;modal.current?.showModal()}};
- useEffect(()=>{let raf=0;const onScroll=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{const max=document.documentElement.scrollHeight-innerHeight;setProgress(max>0?scrollY/max*100:0)});};addEventListener('scroll',onScroll,{passive:true});onScroll();return()=>{removeEventListener('scroll',onScroll);cancelAnimationFrame(raf)}},[]);
- useGSAP(()=>{const mm=gsap.matchMedia();mm.add({desktop:'(min-width: 800px)',mobile:'(max-width: 799px)',reduce:'(prefers-reduced-motion: reduce)'},ctx=>{if(ctx.conditions.reduce)return;const tl=gsap.timeline({defaults:{ease:'power3.out'}});tl.from('.rd-header',{y:-18,opacity:0,duration:.55}).from('.rd-copy h1 span',{yPercent:110,opacity:0,duration:.75,stagger:.12},'-.18').from('.rd-hero-image>img',{clipPath:'inset(0 0 100% 0 round 170px 170px 12px 12px)',duration:1,ease:'power2.inOut'},'-.45').from('.rd-actions,.rd-online',{y:15,opacity:0,stagger:.1,duration:.4},'-.3');gsap.utils.toArray('[data-reveal]').forEach(el=>gsap.from(el,{y:30,opacity:0,duration:.75,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 85%',once:true}}));gsap.to('.rd-hero-image>img',{yPercent:8,scale:1.05,ease:'none',scrollTrigger:{trigger:'.rd-hero',start:'top top',end:'bottom top',scrub:.7}});gsap.to('.rd-gallery-track',{xPercent:-24,ease:'none',scrollTrigger:{trigger:'.rd-gallery',start:'top top',end:'+=950',pin:'.rd-gallery',scrub:.8,anticipatePin:1}});gsap.to('.rd-immersive>img',{yPercent:10,ease:'none',scrollTrigger:{trigger:'.rd-immersive',start:'top bottom',end:'bottom top',scrub:.8}});gsap.from('.rd-step',{x:24,opacity:0,stagger:.15,duration:.55,scrollTrigger:{trigger:'.rd-timeline',start:'top 75%',once:true}});gsap.from('.rd-article',{y:28,opacity:0,stagger:.14,duration:.6,scrollTrigger:{trigger:'.rd-reading-grid',start:'top 80%',once:true}});gsap.to('.rd-header',{height:68,scrollTrigger:{trigger:'.rd-hero',start:'top top',end:'+=170',scrub:.4}});gsap.to('.scroll-progress',{scaleX:1,ease:'none',scrollTrigger:{trigger:document.body,start:'top top',end:'bottom bottom',scrub:.1}});return()=>tl.kill()});return()=>mm.revert()},{scope:root});
- const cta=(text='Agendar uma conversa',light=false)=> <button className={`rd-button ${light?'light':''}`} onClick={contact}>{text}<ArrowUpRight size={17}/></button>;
- return <div ref={root}><div className="scroll-progress"/><header className="rd-header"><a className="rd-brand" href="#inicio"><span><Sprout size={23}/></span><b>Clara Martins<small>NUTRIÇÃO & BEM-ESTAR</small></b></a><button className="rd-menu" onClick={()=>setMenu(!menu)} aria-label={menu?'Fechar menu':'Abrir menu'}>{menu?<X/>:<Menu/>}</button><nav className={menu?'rd-nav open':'rd-nav'}><a href="#abordagem" onClick={()=>setMenu(false)}>Abordagem</a><a href="#sobre" onClick={()=>setMenu(false)}>Sobre mim</a><a href="#jornada" onClick={()=>setMenu(false)}>Acompanhamento</a><a href="#galeria" onClick={()=>setMenu(false)}>Conteúdos</a></nav><div className="rd-head-cta">{cta('Vamos conversar')}</div></header>
- <main id="inicio"><section className="rd-hero"><div className="rd-hero-inner"><div className="rd-copy"><span className="rd-kicker"><i/> NUTRIÇÃO · EQUILÍBRIO · VIDA REAL</span><h1><span>Comer bem.</span><span>Viver leve.</span><span><em>Ser você.</em></span></h1><p className="rd-lead">Um cuidado que acolhe a sua história e respeita o seu jeito de viver.</p><p className="rd-sub">Nutrição individualizada, com ciência, escuta e escolhas que cabem na sua rotina.</p><div className="rd-actions">{cta('Conheça o acompanhamento')}<a className="rd-secondary" href="#abordagem">Nossa abordagem <ArrowDown size={16}/></a></div><small className="rd-online"><span/> Atendimento online e presencial</small></div><figure className="rd-hero-image"><img src={photos.food} alt="Refeição colorida com vegetais frescos" fetchPriority="high"/><figcaption><Leaf size={17}/> Cuidado que começa na escuta</figcaption><div className="rd-orbit">NUTRIR<br/><Sprout size={24}/><br/>COM LEVEZA</div></figure><a className="rd-scroll" href="#destaques"><span>DESLIZE PARA DESCOBRIR</span><ArrowDown size={15}/></a></div></section>
- <section className="rd-strip" id="destaques"><div><span>01 / SEM EXTREMOS</span><b>Mais equilíbrio, menos regras.</b></div><i/><div><span>02 / COM PRESENÇA</span><b>Escuta em cada etapa.</b></div><i/><div><span>03 / NA VIDA REAL</span><b>Hábitos que fazem sentido.</b></div></section>
- <section className="rd-about rd-section" id="sobre"><div className="rd-about-pic" data-reveal="mask"><img src={photos.portrait} alt="Imagem ilustrativa de uma profissional em conversa" loading="lazy"/><span>UM ENCONTRO, NÃO UMA FÓRMULA</span></div><div className="rd-about-text" data-reveal><span className="rd-kicker">PRAZER, CLARA MARTINS</span><h2>Por trás de cada escolha,<br/>existe <em>uma história.</em></h2><p>Acredito em uma nutrição que começa pela escuta. Que acolhe seus gostos, entende sua rotina e considera aquilo que importa para você.</p><p>O acompanhamento é um espaço para construir mais autonomia e tranquilidade à mesa — um passo de cada vez, sem fórmulas prontas.</p><div className="rd-signature">Clara Martins <Sprout size={24}/></div><small className="rd-demo-note">Perfil e fotografia ilustrativos para demonstração.</small></div></section>
- <section className="rd-philosophy" id="abordagem"><span className="rd-kicker">UMA OUTRA FORMA DE OLHAR</span><p data-reveal>Nutrir vai muito além<br/>do que colocamos <em>no prato.</em></p><span className="rd-phil-mark"><Leaf size={28}/> CORPO · ROTINA · ACOLHIMENTO</span></section>
- <section className="rd-services rd-section"><div className="rd-section-heading" data-reveal><div><span className="rd-kicker">CUIDADO INDIVIDUALIZADO</span><h2>Um caminho que<br/><em>faz sentido para você.</em></h2></div><p>Sem receitas universais.<br/>Com espaço para descobrir o que funciona na sua vida.</p></div><div className="rd-service-list">{[['01','Reeducação alimentar','Mais consciência, variedade e prazer nas escolhas do cotidiano.',Utensils],['02','Hábitos e rotina','Estratégias possíveis para uma relação mais equilibrada com a comida.',Sprout],['03','Acompanhamento individual','Orientações construídas a partir da sua história e dos seus objetivos.',Heart]].map(([n,t,d,Icon],i)=><article className="rd-service" data-reveal key={n}><span className="rd-service-no">{n}</span><Icon className="rd-service-icon" size={25}/><h3>{t}</h3><p>{d}</p><span className="rd-service-line" style={{'--i':i}}/></article>)}</div></section>
- <section className="rd-journey rd-section" id="jornada"><div className="rd-journey-intro" data-reveal><span className="rd-kicker">COMO CAMINHAMOS JUNTOS</span><h2>Um passo de cada vez.<br/><em>No seu ritmo.</em></h2><p>Um processo próximo, com espaço para ajustar o percurso e celebrar cada descoberta.</p>{cta('Conversar sobre o processo')}</div><div className="rd-timeline">{journey.map(([n,t,d])=><article className="rd-step" data-reveal key={n}><span>{n}</span><div><h3>{t}</h3><p>{d}</p></div><i/></article>)}</div></section>
- <section className="rd-immersive"><img src={photos.fruit} alt="Frutas e ingredientes frescos em uma mesa" loading="lazy"/><div className="rd-immersive-shade"/><div className="rd-immersive-copy" data-reveal><Leaf size={27}/><span>UM CONVITE À PRESENÇA</span><h2>Mais cor.<br/>Mais calma.<br/><em>Mais você.</em></h2></div><small>ALIMENTAÇÃO COM ESPAÇO PARA A VIDA</small></section>
+const principles = [
+  { icon: ClipboardCheck, index: '01', title: 'Baseado em evidências', text: 'Orientações responsáveis, construídas a partir de conhecimento científico e contexto individual.' },
+  { icon: CalendarDays, index: '02', title: 'Planejado para sua rotina', text: 'Uma estratégia possível, que considera seus horários, preferências e a vida que acontece todos os dias.' },
+  { icon: HeartHandshake, index: '03', title: 'Sem culpa ou extremismos', text: 'Acolhimento para criar autonomia alimentar sem listas proibidas ou promessas irreais.' },
+];
 
- <section className="rd-gallery" id="galeria"><div className="rd-gallery-heading"><span className="rd-kicker">UM OLHAR SOBRE O COTIDIANO</span><h2>Comer tamb?m ? <em>sentir.</em></h2><p>Uma galeria de ingredientes, gestos e pausas que cabem na vida real.</p></div><div className="rd-gallery-track"><figure className="rd-gallery-item g1"><img src={photos.market} alt="Ingredientes frescos" loading="lazy"/><figcaption><span>01</span>Ingredientes frescos</figcaption></figure><figure className="rd-gallery-item g2"><img src={photos.cooking} alt="Preparar com calma" loading="lazy"/><figcaption><span>02</span>Preparar com calma</figcaption></figure><figure className="rd-gallery-item g3"><img src={photos.citrus} alt="Cores da esta??o" loading="lazy"/><figcaption><span>03</span>Cores da esta??o</figcaption></figure><figure className="rd-gallery-item g4"><img src={photos.table} alt="? mesa" loading="lazy"/><figcaption><span>04</span>? mesa</figcaption></figure><figure className="rd-gallery-item g5"><img src={photos.herbs} alt="Pequenos detalhes" loading="lazy"/><figcaption><span>05</span>Pequenos detalhes</figcaption></figure><figure className="rd-gallery-item g6"><img src={photos.prep} alt="Feito em casa" loading="lazy"/><figcaption><span>06</span>Feito em casa</figcaption></figure><figure className="rd-gallery-item g7"><img src={photos.bread} alt="Prazer cotidiano" loading="lazy"/><figcaption><span>07</span>Prazer cotidiano</figcaption></figure><figure className="rd-gallery-item g8"><img src={photos.greens} alt="Mais natureza" loading="lazy"/><figcaption><span>08</span>Mais natureza</figcaption></figure></div></section>
- <section className="rd-benefits rd-section"><span className="rd-kicker">O QUE PODEMOS CULTIVAR</span><div className="rd-benefit-grid"><article data-reveal><strong>01</strong><div><h3>Mais autonomia</h3><p>Compreensão para fazer escolhas com mais confiança no dia a dia.</p></div></article><article data-reveal><strong>02</strong><div><h3>Mais tranquilidade</h3><p>Um olhar acolhedor para a alimentação, sem culpa ou julgamentos.</p></div></article><article data-reveal><strong>03</strong><div><h3>Mais consistência</h3><p>Pequenas mudanças construídas com continuidade e flexibilidade.</p></div></article></div></section>
- <section className="rd-reading rd-section" id="conteudos"><div className="rd-section-heading" data-reveal><div><span className="rd-kicker">IDEIAS PARA LEVAR COM VOCÊ</span><h2>Nutrição para<br/><em>a vida acontecendo.</em></h2></div><span className="rd-demo-note">Conteúdos demonstrativos · sem promessas clínicas</span></div><div className="rd-reading-grid">{topics.map(([t,d,img],i)=><article className="rd-article" data-reveal key={t}><div className="rd-article-img"><img src={img} alt="" loading="lazy"/><span>LEITURA 0{i+1}</span></div><h3>{t}</h3><p>{d}</p><a href="#duvidas">Explorar ideia <ArrowRight size={16}/></a></article>)}</div></section>
- <section className="rd-faq rd-section" id="duvidas"><div data-reveal><span className="rd-kicker">PERGUNTAS FREQUENTES</span><h2>Começar pode<br/><em>ser simples.</em></h2><p>Vamos conversar sobre o que você precisa saber?</p>{cta('Fale comigo')}</div><div className="rd-questions">{[['Como funciona a primeira consulta?','É um momento de escuta para conhecer sua rotina, sua relação com a comida e o que você espera do acompanhamento.'],['O atendimento pode ser online?','Sim. A consulta pode ser feita por videochamada; os detalhes são combinados no contato inicial.'],['Vou precisar cortar os alimentos que gosto?','As orientações são individualizadas e construídas em consulta, considerando suas preferências e necessidades.'],['Como faço para agendar?','Use um dos botões para conversar pelo WhatsApp e consultar horários, formatos e valores.']].map(([q,a])=><details key={q}><summary>{q}<ChevronDown size={18}/></summary><p>{a}</p></details>)}</div></section>
- <section className="rd-cta"><span className="rd-kicker">SEU PRÓXIMO PASSO PODE SER UMA CONVERSA</span><h2>Cuidar de você pode<br/>começar <em>com leveza.</em></h2><p>Vamos encontrar um caminho que faça sentido para a sua vida?</p>{cta('Conversar pelo WhatsApp',true)}<small>Sem pressa. Sem julgamentos. Com acolhimento.</small></section></main>
- <footer className="rd-footer"><a className="rd-brand" href="#inicio"><span><Sprout size={22}/></span><b>Clara Martins<small>NUTRIÇÃO & BEM-ESTAR</small></b></a><span>Site demonstrativo · perfil e conteúdo fictícios</span><a href="#inicio">VOLTAR AO TOPO ↑</a></footer><button className="rd-float" onClick={contact} aria-label="Conversar pelo WhatsApp"><MessageCircle size={22}/></button>
- <dialog ref={modal} onClose={()=>lastContact.current?.focus()} onClick={e=>{if(e.target===modal.current)modal.current.close()}}><button className="rd-close" onClick={()=>modal.current?.close()} aria-label="Fechar"><X/></button><MessageCircle size={32}/><h2>Vamos conversar?</h2><p>Esta é uma página de demonstração. Configure o número do WhatsApp em src/config.js para ativar o contato direto.</p><button className="rd-button" onClick={()=>modal.current?.close()}>Entendi <Check size={17}/></button></dialog></div>;
+const services = [
+  ['Consulta presencial', 'Em Jaboticabal, SP', 'Um encontro completo para compreender sua história, rotina e objetivos.'],
+  ['Consulta online', 'De onde você estiver', 'A mesma escuta cuidadosa em uma experiência digital simples e próxima.'],
+  ['Acompanhamento individual', 'Estratégia contínua', 'Revisões e ajustes para que o planejamento acompanhe suas necessidades reais.'],
+  ['Reeducação alimentar', 'Autonomia no cotidiano', 'Conhecimento e ferramentas para fazer escolhas com mais confiança e flexibilidade.'],
+];
+
+const journey = [
+  ['01', 'Escuta e avaliação', 'Começamos pela sua história, preferências, exames disponíveis e relação com a alimentação.'],
+  ['02', 'Objetivos possíveis', 'Definimos prioridades claras, respeitando o seu momento e aquilo que realmente importa.'],
+  ['03', 'Estratégia personalizada', 'Construímos um planejamento alimentar flexível, prático e conectado à sua rotina.'],
+  ['04', 'Evolução e ajustes', 'Acompanhamos avanços, dificuldades e descobertas para ajustar o caminho sem cobranças.'],
+];
+
+const faqs = [
+  ['Como funciona a primeira consulta?', 'É um encontro de escuta e avaliação. Conversamos sobre rotina, hábitos, preferências, histórico e objetivos antes de construir qualquer orientação.'],
+  ['O atendimento também pode ser online?', 'Sim. O site prevê atendimento presencial em Jaboticabal e atendimento online. Horários e detalhes serão confirmados no contato inicial.'],
+  ['Vou precisar deixar de comer tudo o que gosto?', 'A proposta demonstrada é individualizada e sem restrições desnecessárias. As escolhas são construídas considerando saúde, preferências e contexto.'],
+  ['O plano alimentar é personalizado?', 'Sim. O planejamento ilustrado considera necessidades e rotina de cada pessoa. Nenhum material desta página substitui uma consulta profissional.'],
+  ['Como posso agendar?', 'Use qualquer botão “Agende sua consulta”. Enquanto o número não estiver configurado, o site exibirá uma orientação para adicionar o WhatsApp real.'],
+];
+
+function Brand({ inverse = false }) {
+  return (
+    <a className={`brand ${inverse ? 'brand--inverse' : ''}`} href="#inicio" aria-label="Clara Martins — início">
+      <span className="brand__mark" aria-hidden="true"><Leaf size={18} /></span>
+      <span className="brand__type"><strong>Clara Martins</strong><small>NUTRIÇÃO PARA A VIDA REAL</small></span>
+    </a>
+  );
+}
+
+function Eyebrow({ children, light = false }) {
+  return <span className={`eyebrow ${light ? 'eyebrow--light' : ''}`}>{children}</span>;
+}
+
+export default function App() {
+  const root = useRef(null);
+  const modal = useRef(null);
+  const lastContact = useRef(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  const openContact = (event) => {
+    if (siteConfig.whatsappNumber) {
+      const number = siteConfig.whatsappNumber.replace(/\D/g, '');
+      window.open(`https://wa.me/${number}?text=${encodeURIComponent(siteConfig.whatsappMessage)}`, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    lastContact.current = event.currentTarget;
+    modal.current?.showModal();
+  };
+
+  const closeMenu = () => setMenuOpen(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 28);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle('menu-is-open', menuOpen);
+    return () => document.body.classList.remove('menu-is-open');
+  }, [menuOpen]);
+
+  useGSAP(() => {
+    const media = gsap.matchMedia();
+    media.add({ desktop: '(min-width: 821px)', mobile: '(max-width: 820px)', reduce: '(prefers-reduced-motion: reduce)' }, (context) => {
+      if (context.conditions.reduce) {
+        gsap.set('[data-reveal], .hero__line > span, .hero__visual, .hero__support', { clearProps: 'all' });
+        return;
+      }
+
+      const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      intro
+        .from('.announcement', { yPercent: -100, duration: 0.45 })
+        .from('.site-header', { y: -20, opacity: 0, duration: 0.55 }, '-=0.18')
+        .from('.hero__eyebrow', { y: 14, opacity: 0, duration: 0.45 }, '-=0.1')
+        .from('.hero__line > span', { yPercent: 110, opacity: 0, duration: 0.85, stagger: 0.11 }, '-=0.16')
+        .from('.hero__support', { y: 20, opacity: 0, duration: 0.6 }, '-=0.46')
+        .from('.hero__visual', { y: 35, opacity: 0, clipPath: 'inset(12% 0 0 0 round 24px)', duration: 0.95 }, '-=0.67');
+
+      gsap.utils.toArray('[data-reveal]').forEach((element) => {
+        gsap.from(element, { y: 34, opacity: 0, duration: 0.78, ease: 'power2.out', scrollTrigger: { trigger: element, start: 'top 87%', once: true } });
+      });
+      gsap.to('.hero__photo img', { yPercent: 7, scale: 1.055, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.8 } });
+      gsap.to('.story__image img', { yPercent: 9, ease: 'none', scrollTrigger: { trigger: '.story', start: 'top bottom', end: 'bottom top', scrub: 0.8 } });
+
+      if (context.conditions.desktop) {
+        gsap.to('.journey__rail', {
+          y: () => Math.max(0, document.querySelector('.journey__steps')?.offsetHeight - 164),
+          ease: 'none',
+          scrollTrigger: { trigger: '.journey__steps', start: 'top 58%', end: 'bottom 62%', scrub: 0.5 },
+        });
+      }
+      gsap.to('.scroll-progress', { scaleX: 1, ease: 'none', scrollTrigger: { trigger: document.documentElement, start: 'top top', end: 'bottom bottom', scrub: 0.1 } });
+    });
+    return () => media.revert();
+  }, { scope: root });
+
+  return (
+    <div ref={root}>
+      <div className="scroll-progress" aria-hidden="true" />
+      <div className="announcement">
+        <span>Atendimento presencial em Jaboticabal e online</span>
+        <a href="#contato">Conheça os formatos <ArrowRight size={13} /></a>
+      </div>
+
+      <header className={`site-header ${scrolled ? 'site-header--scrolled' : ''}`}>
+        <div className="container site-header__inner">
+          <Brand />
+          <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="main-navigation" aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'} onClick={() => setMenuOpen((value) => !value)}>
+            {menuOpen ? <X size={21} /> : <Menu size={21} />}
+          </button>
+          <nav id="main-navigation" className={`main-nav ${menuOpen ? 'main-nav--open' : ''}`} aria-label="Navegação principal">
+            <a href="#abordagem" onClick={closeMenu}>Abordagem</a>
+            <a href="#atendimentos" onClick={closeMenu}>Atendimentos</a>
+            <a href="#processo" onClick={closeMenu}>Como funciona</a>
+            <a href="#sobre" onClick={closeMenu}>Sobre</a>
+            <button className="button button--dark nav-cta" type="button" onClick={openContact}>Agende sua consulta <ArrowUpRight size={16} /></button>
+          </nav>
+        </div>
+      </header>
+
+      <main id="inicio">
+        <section className="hero">
+          <div className="container hero__grid">
+            <div className="hero__copy">
+              <Eyebrow><span className="hero__eyebrow">NUTRIÇÃO CLÍNICA E COMPORTAMENTAL</span></Eyebrow>
+              <h1>
+                <span className="hero__line"><span>Nutrição que</span></span>
+                <span className="hero__line"><span>acolhe a sua</span></span>
+                <span className="hero__line"><span className="accent">vida real.</span></span>
+              </h1>
+              <div className="hero__support">
+                <p>Um acompanhamento individualizado para transformar sua alimentação com equilíbrio, autonomia e escolhas que fazem sentido na sua rotina.</p>
+                <div className="hero__actions">
+                  <button className="button button--dark" type="button" onClick={openContact}>Agende sua consulta <ArrowUpRight size={17} /></button>
+                  <a className="button button--outline" href="#abordagem">Conheça meu trabalho <ArrowDown size={16} /></a>
+                </div>
+                <div className="hero__meta">
+                  <span><MapPin size={15} /> {siteConfig.city}</span>
+                  <span><Monitor size={15} /> Presencial e online</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="hero__visual" aria-label="Composição ilustrativa sobre alimentação e acompanhamento nutricional">
+              <figure className="hero__photo">
+                <img src={photos.prep} alt="Pessoas preparando uma refeição em uma cozinha clara" fetchPriority="high" />
+                <figcaption>Imagem documental ilustrativa</figcaption>
+              </figure>
+              <div className="consult-card consult-card--top">
+                <span className="consult-card__icon"><Sparkles size={16} /></span>
+                <div><small>PLANO POSSÍVEL</small><strong>Feito para a sua rotina</strong></div>
+              </div>
+              <div className="consult-card consult-card--bottom">
+                <div className="consult-card__row"><span>ACOMPANHAMENTO</span><span>INDIVIDUAL</span></div>
+                <p>“O que pode funcionar melhor para você esta semana?”</p>
+                <span className="consult-card__status"><i /> Próxima revisão planejada</span>
+              </div>
+              <span className="hero__stamp"><Leaf size={21} /> CIÊNCIA<br />COM ESCUTA</span>
+            </div>
+          </div>
+          <a className="hero__scroll" href="#abordagem"><span>DESCUBRA A ABORDAGEM</span><ArrowDown size={14} /></a>
+        </section>
+
+        <section className="manifesto" id="abordagem">
+          <div className="container manifesto__grid">
+            <Eyebrow>UMA NUTRIÇÃO MAIS HUMANA</Eyebrow>
+            <div className="manifesto__copy" data-reveal>
+              <h2>Comer bem não precisa ser viver em <em>restrição.</em></h2>
+              <p>Saúde não nasce de uma fórmula pronta. Ela é construída no encontro entre ciência, contexto e escolhas que você consegue sustentar com tranquilidade.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="principles section">
+          <div className="container">
+            <div className="section-heading" data-reveal>
+              <div><Eyebrow>O QUE ORIENTA CADA ENCONTRO</Eyebrow><h2>Clareza para escolher.<br /><em>Liberdade para viver.</em></h2></div>
+              <p>Uma abordagem sem atalhos, com responsabilidade clínica e espaço para a sua singularidade.</p>
+            </div>
+            <div className="principles__grid">
+              {principles.map(({ icon: Icon, index, title, text }) => (
+                <article className="principle-card" data-reveal key={index}>
+                  <div className="principle-card__top"><span>{index}</span><Icon size={22} /></div>
+                  <div><h3>{title}</h3><p>{text}</p></div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="services section" id="atendimentos">
+          <div className="container">
+            <div className="services__intro" data-reveal>
+              <div><Eyebrow>ATENDIMENTOS</Eyebrow><h2>Cuidado que acompanha o seu <em>momento.</em></h2></div>
+              <p>Formatos demonstrativos para uma jornada individual, próxima e construída em conjunto.</p>
+            </div>
+            <div className="services__list">
+              {services.map(([title, meta, text], index) => (
+                <article className="service-row" data-reveal key={title}>
+                  <span className="service-row__number">0{index + 1}</span><h3>{title}</h3><span className="service-row__meta">{meta}</span><p>{text}</p><ArrowUpRight className="service-row__arrow" size={20} />
+                </article>
+              ))}
+            </div>
+            <p className="demo-disclaimer">Serviços apresentados exclusivamente para fins demonstrativos.</p>
+          </div>
+        </section>
+
+        <section className="story">
+          <div className="story__image" aria-hidden="true"><img src={photos.food} alt="" loading="lazy" /></div>
+          <div className="story__panel" data-reveal>
+            <Eyebrow light>PARA ALÉM DO PRATO</Eyebrow>
+            <blockquote>“Uma alimentação possível não ocupa toda a sua vida. Ela ajuda você a vivê-la melhor.”</blockquote>
+            <div className="story__details"><span><Leaf size={16} /> Corpo</span><span><Clock3 size={16} /> Rotina</span><span><HeartHandshake size={16} /> Acolhimento</span></div>
+          </div>
+        </section>
+
+        <section className="journey section" id="processo">
+          <div className="container journey__grid">
+            <div className="journey__intro" data-reveal>
+              <Eyebrow>COMO FUNCIONA</Eyebrow><h2>Um caminho construído <em>com você.</em></h2>
+              <p>Da primeira conversa aos ajustes do dia a dia, cada etapa existe para tornar o cuidado mais claro e sustentável.</p>
+              <button className="button button--dark" type="button" onClick={openContact}>Comece por uma conversa <ArrowUpRight size={17} /></button>
+            </div>
+            <div className="journey__steps">
+              <span className="journey__line" aria-hidden="true"><i className="journey__rail" /></span>
+              {journey.map(([number, title, text]) => <article className="journey-step" data-reveal key={number}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></article>)}
+            </div>
+          </div>
+        </section>
+
+        <section className="editorial section">
+          <div className="container">
+            <div className="editorial__headline" data-reveal><Eyebrow>VIDA REAL, TODOS OS DIAS</Eyebrow><h2>Alimentação é também rotina, memória, prazer e <em>presença.</em></h2></div>
+            <div className="editorial__grid">
+              <figure className="editorial-card editorial-card--large" data-reveal><img src={photos.table} alt="Refeição colorida organizada sobre uma mesa de madeira" loading="lazy" /><figcaption><span>01 / AUTONOMIA</span><strong>Escolhas com mais confiança</strong></figcaption></figure>
+              <div className="editorial__notes">
+                <article data-reveal><Target size={21} /><span>SEM FÓRMULAS UNIVERSAIS</span><h3>Objetivos que respeitam o seu ponto de partida.</h3></article>
+                <article data-reveal><Sprout size={21} /><span>MUDANÇAS SUSTENTÁVEIS</span><h3>Pequenos passos que encontram espaço para permanecer.</h3></article>
+              </div>
+              <figure className="editorial-card editorial-card--small" data-reveal><img src={photos.herbs} alt="Folhas verdes em fundo branco" loading="lazy" /><figcaption><span>02 / EQUILÍBRIO</span><strong>Menos regras. Mais consciência.</strong></figcaption></figure>
+            </div>
+          </div>
+        </section>
+
+        <section className="about section" id="sobre">
+          <div className="container about__grid">
+            <div className="about__profile" data-reveal>
+              <div className="about__monogram"><span>CM</span><Leaf size={24} /></div>
+              <div className="about__profile-copy"><span>PERFIL PROFISSIONAL DEMONSTRATIVO</span><strong>Clara Martins</strong><small>Nutricionista · CRN [A INSERIR]</small></div>
+              <div className="about__location"><MapPin size={15} /> {siteConfig.city}</div>
+            </div>
+            <div className="about__copy" data-reveal>
+              <Eyebrow>SOBRE CLARA</Eyebrow><h2>Ciência para orientar.<br /><em>Escuta para acolher.</em></h2>
+              <p>Clara Martins é uma identidade profissional fictícia criada para esta demonstração. A proposta do atendimento representa uma nutrição clínica próxima, individualizada e baseada em evidências.</p>
+              <p>Este espaço está preparado para receber futuramente a fotografia oficial, formação, número de registro e demais informações verificadas da profissional.</p>
+              <div className="about__signature">Clara Martins <span>— Nutrição para a Vida Real</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="faq section" id="duvidas">
+          <div className="container faq__grid">
+            <div className="faq__intro" data-reveal><Eyebrow>PERGUNTAS FREQUENTES</Eyebrow><h2>Antes de começar, vamos deixar tudo mais <em>simples.</em></h2><p>As respostas abaixo são demonstrativas e poderão ser ajustadas à prática profissional real.</p></div>
+            <div className="faq__list">{faqs.map(([question, answer]) => <details data-reveal key={question}><summary><span>{question}</span><ChevronDown size={19} /></summary><p>{answer}</p></details>)}</div>
+          </div>
+        </section>
+
+        <section className="contact section" id="contato">
+          <div className="container contact__panel" data-reveal>
+            <div className="contact__copy"><Eyebrow light>SEU PRÓXIMO PASSO PODE SER UMA CONVERSA</Eyebrow><h2>Sua alimentação pode acompanhar a vida que você quer <em>viver.</em></h2></div>
+            <div className="contact__action"><p>Agende uma conversa inicial e conheça os formatos de acompanhamento.</p><button className="button button--light" type="button" onClick={openContact}>Agende sua consulta <ArrowUpRight size={17} /></button><small>WhatsApp configurável · nenhuma mensagem é enviada sem sua ação</small></div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="site-footer">
+        <div className="container site-footer__top">
+          <Brand inverse />
+          <div className="site-footer__column"><strong>Atendimento</strong><span>Presencial em Jaboticabal, SP</span><span>Online · disponibilidade a confirmar</span></div>
+          <div className="site-footer__column"><strong>Contato</strong><span>WhatsApp: {siteConfig.whatsappNumber || '[A CONFIGURAR]'}</span><span>E-mail: {siteConfig.email || '[A INSERIR]'}</span><span>Instagram: {siteConfig.instagramUrl || '[A INSERIR]'}</span></div>
+          <div className="site-footer__column"><strong>Informações</strong><span>CRN: {siteConfig.crn || '[A INSERIR]'}</span><span>Política de privacidade: [A ADICIONAR]</span><a href="https://www.pexels.com" target="_blank" rel="noreferrer">Imagens ilustrativas · Pexels</a><a href="#inicio">Voltar ao topo ↑</a></div>
+        </div>
+        <div className="container site-footer__bottom"><span>© 2026 Clara Martins — Projeto demonstrativo.</span><span>Profissional, conteúdo e dados de contato fictícios.</span></div>
+      </footer>
+
+      <button className="floating-contact" type="button" onClick={openContact} aria-label="Agendar pelo WhatsApp"><MessageCircle size={22} /><span>Agendar</span></button>
+      <dialog ref={modal} className="contact-dialog" onClose={() => lastContact.current?.focus()} onClick={(event) => { if (event.target === modal.current) modal.current.close(); }}>
+        <button className="contact-dialog__close" type="button" onClick={() => modal.current?.close()} aria-label="Fechar"><X size={20} /></button>
+        <span className="contact-dialog__icon"><MessageCircle size={25} /></span><Eyebrow>CONTATO DEMONSTRATIVO</Eyebrow>
+        <h2>O WhatsApp ainda não foi configurado.</h2><p>Adicione o número real em <code>src/config.js</code>. Até lá, nenhum contato externo será aberto.</p>
+        <button className="button button--dark" type="button" onClick={() => modal.current?.close()}>Entendi <Check size={17} /></button>
+      </dialog>
+    </div>
+  );
 }

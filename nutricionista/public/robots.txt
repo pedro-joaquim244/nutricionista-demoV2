@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# Adicione o endereço definitivo do sitemap após definir o domínio.
